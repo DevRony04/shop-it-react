@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { Search, Filter, ShoppingCart } from 'lucide-react';
@@ -17,6 +16,10 @@ const ShopPage = () => {
   const { addItem } = useCart();
 
   const filteredAndSortedProducts = useMemo(() => {
+    console.log('All products:', products);
+    console.log('Search query:', searchQuery);
+    console.log('Selected category:', selectedCategory);
+    
     let filtered = products;
 
     // Filter by search query
@@ -48,6 +51,7 @@ const ShopPage = () => {
       }
     });
 
+    console.log('Filtered and sorted products:', sorted);
     return sorted;
   }, [searchQuery, selectedCategory, sortBy]);
 
@@ -147,61 +151,64 @@ const ShopPage = () => {
         {/* Products Grid */}
         {filteredAndSortedProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredAndSortedProducts.map((product) => (
-              <Card key={product.id} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                <CardContent className="p-0">
-                  <div className="relative overflow-hidden">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                      <Link to={`/product/${product.id}`}>
-                        <Button variant="secondary" size="sm">
-                          View Details
-                        </Button>
-                      </Link>
-                    </div>
-                    {!product.inStock && (
-                      <div className="absolute top-2 left-2">
-                        <span className="bg-red-500 text-white px-2 py-1 text-xs rounded">
-                          Out of Stock
-                        </span>
+            {filteredAndSortedProducts.map((product) => {
+              console.log('Rendering product:', product.name);
+              return (
+                <Card key={product.id} className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <CardContent className="p-0">
+                    <div className="relative overflow-hidden">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                        <Link to={`/product/${product.id}`}>
+                          <Button variant="secondary" size="sm">
+                            View Details
+                          </Button>
+                        </Link>
                       </div>
-                    )}
-                  </div>
-                  
-                  <div className="p-4">
-                    <span className="text-sm text-blue-600 font-medium">
-                      {product.category}
-                    </span>
-                    <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 mt-1">
-                      {product.name}
-                    </h3>
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-2xl font-bold text-blue-600">
-                        ${product.price}
+                      {!product.inStock && (
+                        <div className="absolute top-2 left-2">
+                          <span className="bg-red-500 text-white px-2 py-1 text-xs rounded">
+                            Out of Stock
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="p-4">
+                      <span className="text-sm text-blue-600 font-medium">
+                        {product.category}
                       </span>
-                      <div className="flex items-center text-sm text-gray-500">
-                        <span className="text-yellow-400">★</span>
-                        <span className="ml-1">{product.rating}</span>
-                        <span className="ml-1">({product.reviews})</span>
+                      <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 mt-1">
+                        {product.name}
+                      </h3>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-2xl font-bold text-blue-600">
+                          ${product.price}
+                        </span>
+                        <div className="flex items-center text-sm text-gray-500">
+                          <span className="text-yellow-400">★</span>
+                          <span className="ml-1">{product.rating}</span>
+                          <span className="ml-1">({product.reviews})</span>
+                        </div>
                       </div>
+                      <Button
+                        onClick={() => handleAddToCart(product)}
+                        className="w-full"
+                        size="sm"
+                        disabled={!product.inStock}
+                      >
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        {product.inStock ? 'Add to Cart' : 'Out of Stock'}
+                      </Button>
                     </div>
-                    <Button
-                      onClick={() => handleAddToCart(product)}
-                      className="w-full"
-                      size="sm"
-                      disabled={!product.inStock}
-                    >
-                      <ShoppingCart className="w-4 h-4 mr-2" />
-                      {product.inStock ? 'Add to Cart' : 'Out of Stock'}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         ) : (
           <div className="text-center py-12">
