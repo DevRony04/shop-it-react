@@ -90,7 +90,7 @@ export const products: Product[] = [
     name: "Portable Power Bank",
     price: 45.99,
     description: "High-capacity 20000mAh power bank with fast charging and multiple ports. Keep your devices powered anywhere you go.",
-    image: "https://images.unsplash.com/photo-1609592094725-12c3c4b19cb1?w=500&h=500&fit=crop",
+    image: "https://media.currys.biz/i/currysprod/10210558?$l-large$&fmt=auto",
     category: "Electronics",
     rating: 4.3,
     reviews: 287,
